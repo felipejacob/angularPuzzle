@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expansión Interactiva</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="js/lib/angular/angular.js"></script>
+    <script type="text/javascript" src="js/puzzle/slidingPuzzle.js"></script>
+	<script type="text/javascript" src="js/puzzle/wordSearchPuzzle.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+</head>
+<body ng-app="puzzleApp">
+	<ul id="types">
+		<li ng-repeat="t in types" ng-class="{'selected': t.id == type}">
+			<a ng-href="#/{{t.id}}">{{t.title}}</a>
+		</li>
+	</ul>
+
+	<div ng-include="type" align="center"></div>
+
+	<a id="powered" href="http://www.exint.com.mx" title="powered by AngularJS"><img src="img/logo.png"/></a>
+
+	<script type="text/ng-template" id="sliding-puzzle">
+		
+		<fieldset id="sliding-advanced" ng-controller="slidingAdvancedCtrl">
+			<legend>Innovación</legend>
+			<div ng-repeat="puzzle in puzzles">
+				<h2>{{puzzle.title}}</h2>
+				
+				<!--<div class="src">
+					<input type="text" ng-model="puzzle.src"/>
+				</div>-->
+				<div class="status">
+					Movimientos: <strong>{{puzzle.api.moves}}</strong><br/>
+					Resueltos: <strong>{{puzzle.api.isSolved()}}</strong>
+				</div>
+				<div class="size">
+					renglones: <input type="text" ng-model="puzzle.rows" size="2"/>
+					columnas: <input type="text" ng-model="puzzle.cols" size="2"/><br/>
+					
+					<button ng-click="puzzle.api.shuffle()">Revolver</button>
+					<button style="margin-top:4px; margin-right:26px;" ng-click="puzzle.api.solve()">Resolver</button>
+				
+				</div>
+				<sliding-puzzle api="puzzle.api" size="{{puzzle.rows}}x{{puzzle.cols}}" src="{{puzzle.src}}"></sliding-puzzle>
+			</div>
+		</fieldset>
+	</script>
+
+	<script type="text/ng-template" id="word-search-puzzle">
+		<div id="word-search" ng-controller="wordSearchCtrl">
+			<ul class="words">
+				<li ng-repeat="word in puzzle.words" ng-class="{'found': word.found}">
+					{{word.name}}
+				</li>
+			</ul>
+			<word-search-puzzle matrix="matrix" words="words" api="puzzle"></word-search-puzzle>
+			<div class="status">
+				<button ng-click="puzzle.solve()" ng-show="!puzzle.solved" class="solve">solve</button>
+				<strong ng-show="puzzle.solved" ng-show="puzzle.solved">Solved!</strong>
+			</div>
+		</div>
+	</script>
+</body>
+</html>
